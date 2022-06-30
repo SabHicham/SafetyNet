@@ -14,12 +14,12 @@ public class PersonController {
 
     // Can Help : https://spring.io/guides/tutorials/rest/
 
-    // TODO: Declare attributes
+    // Declare attributes
     @Autowired
    private PersonRepository personRepository;
 
 
-    // TODO: Get HTTP Method (To be deleted at the end, only to understand how it works 😊 !)
+    // Get HTTP Method
     @RequestMapping(value = "/person", method = RequestMethod.GET)
     @ResponseBody
     public List<PersonDto> getPersons(){

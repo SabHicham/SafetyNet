@@ -1,29 +1,35 @@
 
-/*package safetynet.org.controller;
+package safetynet.org.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import safetynet.org.dao.GenericUrlProviderDAO;
+import safetynet.org.dto.FireStationDto;
 import safetynet.org.model.FireStation;
+import safetynet.org.repository.FireStationRepository;
+import safetynet.org.repository.PersonRepository;
 
 import java.util.List;
 @Slf4j
 @RestController
 public class FireStationController {
 
-    // Can Help : https://spring.io/guides/tutorials/rest/
 
-    // TODO: Declare attributes
-    private final GenericUrlProviderDAO genericUrlProviderDAO = GenericUrlProviderDAO.init();
 
-    // TODO: Get HTTP Method (To be deleted at the end, only to understand how it works 😊 !)
+    // Declare attributes
+    @Autowired
+    private FireStationRepository fireStationRepository;
+
+
+    // Get HTTP Method
     @RequestMapping(value = "/firestation", method = RequestMethod.GET)
     @ResponseBody
-    public List<FireStation> getFireStation(){
-        return genericUrlProviderDAO.getFireStations();
+    public List<FireStationDto> getFireStation(){
+        return fireStationRepository.getAllFireStation();
     }
 
-    // TODO: Post HTTP Method
+
+   /* // TODO: Post HTTP Method
     @RequestMapping(value = "/firestation", method = RequestMethod.POST)
     @ResponseBody
     public String addFireStation(@RequestBody FireStation fireStation){
@@ -67,7 +73,7 @@ public class FireStationController {
             log.error(">>> ERROR: {}", e.getMessage());
             return "ERROR !";
         }
-    }
+    }*/
 
 }
-*/
+
