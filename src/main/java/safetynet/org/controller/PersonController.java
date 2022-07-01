@@ -22,7 +22,7 @@ public class PersonController {
     // Get HTTP Method
     @RequestMapping(value = "/person", method = RequestMethod.GET)
     @ResponseBody
-    public List<PersonDto> getPersons(){
+    public List<PersonDto> getPerson(){
         return personRepository.getAllPerson();
     }
 

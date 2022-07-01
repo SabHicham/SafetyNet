@@ -12,5 +12,7 @@ public class FireStationDto {
 
     public FireStationDto(String address) {
         this.address = address;
+
     }
+
 }

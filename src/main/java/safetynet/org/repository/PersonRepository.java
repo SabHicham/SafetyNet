@@ -19,7 +19,7 @@ public class PersonRepository {
         return personList.add(person);
     }
 public List<PersonDto> getAllPerson(){
-        return personList.stream().map(person -> new PersonDto(person.getLastName())).collect(Collectors.toList());
+        return personList.stream().map(person -> new PersonDto(person.getFirstName())).collect(Collectors.toList());
 }
 
     public boolean deletePersonByEmail(String email) {

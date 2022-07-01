@@ -4,10 +4,10 @@ package safetynet.org.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import safetynet.org.dto.FireStationDto;
-import safetynet.org.model.FireStation;
 import safetynet.org.repository.FireStationRepository;
-import safetynet.org.repository.PersonRepository;
+
 
 import java.util.List;
 @Slf4j

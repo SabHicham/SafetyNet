@@ -21,9 +21,10 @@ public class PersonDto {
 
     private String email;
 
-    public PersonDto(String lastName){
-        this.lastName=lastName;
+    public PersonDto(String firstName){
+        this.firstName=firstName;
     }
+
 }
 
 

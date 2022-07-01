@@ -55,13 +55,13 @@ public class FireStationService {
     }
     public void loadFireStationData(JsonNode root)
     {
-        JsonNode fireStationList = root.path("FireStation");
+        JsonNode fireStationList = root.path("fireStations");
         for (JsonNode nodeFireStation : fireStationList)
         {
             FireStation fireStation = new FireStation();
 
             fireStation.setAddress(nodeFireStation.path("address").asText());
-            fireStation.setStation(Integer.parseInt(nodeFireStation.path("station").asText()));
+            fireStation.setStation(nodeFireStation.path("station").asInt());
 
             fireStationRepository.addFireStation(fireStation);
         }
