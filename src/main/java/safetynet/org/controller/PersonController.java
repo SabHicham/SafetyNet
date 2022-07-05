@@ -20,13 +20,14 @@ public class PersonController {
 
 
     // Get HTTP Method
+
     @RequestMapping(value = "/person", method = RequestMethod.GET)
     @ResponseBody
     public List<PersonDto> getPerson(){
         return personRepository.getAllPerson();
     }
 
-    // TODO: Post HTTP Method
+    // "Post HTTP Method
     @RequestMapping(value = "/person", method = RequestMethod.POST)
     @ResponseBody
     public String addPerson(@RequestBody Person person){
