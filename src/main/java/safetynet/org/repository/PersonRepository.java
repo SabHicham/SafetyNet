@@ -1,7 +1,7 @@
 package safetynet.org.repository;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.LifecycleState;
+
 import org.springframework.stereotype.Repository;
 import safetynet.org.dto.PersonDto;
 import safetynet.org.model.Person;

@@ -35,6 +35,7 @@ public class FireStationRepository {
                 log.info(">>> ERROR: {} {}", key, key1);
                 if (key.equalsIgnoreCase(key1)){
                     fireStationList.get(i).setAddress(fireStation.getAddress());
+                    fireStationList.get(i).setStation(fireStation.getStation());
 
                     return true;
                 }
