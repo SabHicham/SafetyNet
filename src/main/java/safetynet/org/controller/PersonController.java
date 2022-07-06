@@ -32,7 +32,7 @@ public class PersonController {
     @ResponseBody
     public String addPerson(@RequestBody Person person){
         try{
-            // TODO: Add new Person...
+            // Add new Person...
             personRepository.addPerson(person);
             return "SUCCESS !";
         }catch (Exception e){
@@ -41,13 +41,13 @@ public class PersonController {
         }
     }
 
-   /* // TODO: Put HTTP Method
+   // Put HTTP Method
     @RequestMapping(value = "/person", method = RequestMethod.PUT)
     @ResponseBody
     public String updatePerson(@RequestBody Person person){
-        // TODO: Update Existing Person...
+        // Update Existing Person...
         try{
-            if(genericUrlProviderDAO.updatePerson(person)){
+            if(personRepository.updatePerson(person)){
                 return "UPDATED WITH SUCCESS !";
             }
             return "PERSON NOT FOUND !";
@@ -55,15 +55,14 @@ public class PersonController {
             log.error(">>> ERROR: {}", e.getMessage());
             return "ERROR !";
         }
-    }*/
+    }
 
-    // TODO: Delete HTTP Method
-
+    // Delete HTTP Method
     @RequestMapping(value = "/person/{email}", method = RequestMethod.DELETE)
     @ResponseBody
     public String removePerson(@PathVariable String email){
         try{
-            // TODO: Delete new Person...
+            // Delete new Person...
             if (personRepository.deletePersonByEmail(email)){
                 return "REMOVED WITH SUCCESS !";
             }

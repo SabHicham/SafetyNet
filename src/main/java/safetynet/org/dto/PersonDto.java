@@ -21,8 +21,14 @@ public class PersonDto {
 
     private String email;
 
-    public PersonDto(String firstName){
+    public PersonDto(String firstName, String lastName, String address, String city, String zip, String phone, String email){
         this.firstName=firstName;
+        this.lastName=lastName;
+        this.address=address;
+        this.city=city;
+        this.zip=zip;
+        this.phone=phone;
+        this.email=email;
     }
 
 }

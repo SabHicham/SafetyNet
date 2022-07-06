@@ -10,8 +10,9 @@ public class FireStationDto {
 
     private int station;
 
-    public FireStationDto(String address) {
+    public FireStationDto(String address, int station) {
         this.address = address;
+        this.station=station;
 
     }
 

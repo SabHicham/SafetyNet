@@ -55,7 +55,7 @@ public class FireStationService {
     }
     public void loadFireStationData(JsonNode root)
     {
-        JsonNode fireStationList = root.path("fireStations");
+        JsonNode fireStationList = root.path("firestations");
         for (JsonNode nodeFireStation : fireStationList)
         {
             FireStation fireStation = new FireStation();

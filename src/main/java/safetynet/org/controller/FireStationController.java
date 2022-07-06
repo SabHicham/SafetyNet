@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import safetynet.org.dto.FireStationDto;
+import safetynet.org.model.FireStation;
 import safetynet.org.repository.FireStationRepository;
 
 
@@ -29,13 +30,13 @@ public class FireStationController {
     }
 
 
-   /* // TODO: Post HTTP Method
+   // Post HTTP Method
     @RequestMapping(value = "/firestation", method = RequestMethod.POST)
     @ResponseBody
     public String addFireStation(@RequestBody FireStation fireStation){
         try{
-            // TODO: Add new FireStation...
-            genericUrlProviderDAO.addFireStation(fireStation);
+            // Add new FireStation...
+          fireStationRepository.addFireStation(fireStation);
             return "SUCCESS !";
         }catch (Exception e){
             log.error(">>> ERROR: {}", e.getMessage());
@@ -43,13 +44,13 @@ public class FireStationController {
         }
     }
 
-    // TODO: Put HTTP Method
+    // Put HTTP Method
     @RequestMapping(value = "/firestation", method = RequestMethod.PUT)
     @ResponseBody
     public String updateFireStation(@RequestBody FireStation fireStation){
-        // TODO: Update Existing FireStation...
+        // Update Existing FireStation...
         try{
-            if(genericUrlProviderDAO.updateFireStation(fireStation)){
+            if(fireStationRepository.updateFireStation(fireStation)){
                 return "UPDATED WITH SUCCESS !";
             }
             return "FIRE STATION NOT FOUND !";
@@ -59,13 +60,13 @@ public class FireStationController {
         }
     }
 
-    // TODO: Delete HTTP Method
-    @RequestMapping(value = "/firestation", method = RequestMethod.DELETE)
+    // Delete HTTP Method
+    @RequestMapping(value = "/firestation/station", method = RequestMethod.DELETE)
     @ResponseBody
-    public String removeFireStation(@RequestBody FireStation fireStation){
+    public String removeFireStation(@PathVariable String address, int station){
         try{
-            // TODO: Delete new FireStation...
-            if (genericUrlProviderDAO.deleteFireStation(fireStation)){
+            // Delete new FireStation...
+            if (fireStationRepository.deleteFireStationByAddressOrStation(address, station)){
                 return "REMOVED WITH SUCCESS !";
             }
             return "PERSON NOT FOUND !";
@@ -73,7 +74,7 @@ public class FireStationController {
             log.error(">>> ERROR: {}", e.getMessage());
             return "ERROR !";
         }
-    }*/
+    }
 
 }
 
