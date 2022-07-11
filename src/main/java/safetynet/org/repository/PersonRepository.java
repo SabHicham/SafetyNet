@@ -25,8 +25,8 @@ public List<PersonDto> getAllPerson(){
                 person.getCity(), person.getZip(), person.getPhone(), person.getEmail())).collect(Collectors.toList());
 }
 
-    public boolean deletePersonByEmail(String email) {
-        personList = personList.stream().filter((person)-> !Objects.equals(person.getEmail(), email)).collect(Collectors.toList());
+    public boolean deletePerson(String firstName, String lastName) {
+        personList = personList.stream().filter((person)-> !Objects.equals(person.getFirstName(),firstName)&& !Objects.equals(person.getLastName(),lastName)).collect(Collectors.toList());
         return true;
     }
 

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import safetynet.org.dto.FireStationDto;
 import safetynet.org.model.FireStation;
 import safetynet.org.repository.FireStationRepository;
+import safetynet.org.service.FireStationService;
 
 
 import java.util.List;
@@ -19,14 +20,14 @@ public class FireStationController {
 
     // Declare attributes
     @Autowired
-    private FireStationRepository fireStationRepository;
+    private FireStationService fireStationService;
 
 
     // Get HTTP Method
     @RequestMapping(value = "/firestation", method = RequestMethod.GET)
     @ResponseBody
     public List<FireStationDto> getFireStation(){
-        return fireStationRepository.getAllFireStation();
+        return fireStationService.getAllFireStation();
     }
 
 
@@ -36,7 +37,7 @@ public class FireStationController {
     public String addFireStation(@RequestBody FireStation fireStation){
         try{
             // Add new FireStation...
-          fireStationRepository.addFireStation(fireStation);
+            fireStationService.addFirestation(fireStation);
             return "SUCCESS !";
         }catch (Exception e){
             log.error(">>> ERROR: {}", e.getMessage());
@@ -50,7 +51,7 @@ public class FireStationController {
     public String updateFireStation(@RequestBody FireStation fireStation){
         // Update Existing FireStation...
         try{
-            if(fireStationRepository.updateFireStation(fireStation)){
+            if(fireStationService.updateFireStation(fireStation)){
                 return "UPDATED WITH SUCCESS !";
             }
             return "FIRE STATION NOT FOUND !";
@@ -66,7 +67,7 @@ public class FireStationController {
     public String removeFireStation(@PathVariable String address, int station){
         try{
             // Delete new FireStation...
-            if (fireStationRepository.deleteFireStationByAddressOrStation(address, station)){
+            if (fireStationService.deleteFireStationByAddressOrStation(address, station)){
                 return "REMOVED WITH SUCCESS !";
             }
             return "PERSON NOT FOUND !";

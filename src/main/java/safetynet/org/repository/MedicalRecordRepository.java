@@ -56,9 +56,9 @@ public class MedicalRecordRepository {
 
 }
 
-    public boolean deleteMedicalRecord(String firstName) {
+    public boolean deleteMedicalRecord(String firstName, String lastName) {
         medicalRecordList = medicalRecordList.stream().filter((medicalRecord)
-                -> !Objects.equals(medicalRecord.getFirstName(), firstName)).collect(Collectors.toList());
+                -> !Objects.equals(medicalRecord.getFirstName(), firstName)&& !Objects.equals (medicalRecord.getLastName(), lastName)).collect(Collectors.toList());
         return true;
     }
 

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import safetynet.org.dto.MedicalRecordDto;
 import safetynet.org.model.MedicalRecord;
 import safetynet.org.repository.MedicalRecordRepository;
+import safetynet.org.service.MedicalRecordService;
 
 import java.util.List;
 
@@ -16,13 +17,14 @@ public class MedicalRecordController {
 
     //Declare attributes
     @Autowired
-    private final MedicalRecordRepository medicalRecordRepository;
+    private MedicalRecordService medicalRecordService;
 
     // Get HTTP Method
     @RequestMapping(value = "/medicalrecord", method = RequestMethod.GET)
     @ResponseBody
     public List<MedicalRecordDto> getMedicalRecord(){
-        return medicalRecordRepository.getAllMedicalRecord();
+        return medicalRecordService.getAllMedicalRecord();
+
     }
 
     // Post HTTP Method
@@ -31,7 +33,7 @@ public class MedicalRecordController {
     public String addMedicalRecord(@RequestBody MedicalRecord medicalRecord){
         try{
             // Add new MedicalRecord...
-            medicalRecordRepository.addMedicalRecord(medicalRecord);
+            medicalRecordService.addMedicalRecord(medicalRecord);
             return "SUCCESS !";
         }catch (Exception e){
             log.error(">>> ERROR: {}", e.getMessage());
@@ -45,7 +47,7 @@ public class MedicalRecordController {
     public String updateMedicalRecord(@RequestBody MedicalRecord medicalRecord){
         //Update Existing MedicalRecord...
         try{
-            if(medicalRecordRepository.updateMedicalRecord(medicalRecord)){
+            if(medicalRecordService.updateMedicalRecord(medicalRecord)){
                 return "UPDATED WITH SUCCESS !";
             }
             return "FIRE STATION NOT FOUND !";
@@ -61,7 +63,7 @@ public class MedicalRecordController {
     public String removeMedicalRecord(@RequestBody MedicalRecord medicalRecord){
         try{
             //Delete new MedicalRecord...
-            if (medicalRecordRepository.deleteMedicalRecord(medicalRecord.getFirstName())){
+            if (medicalRecordService.deleteMedicalRecord(medicalRecord.getFirstName(), medicalRecord.getLastName())){
                 return "REMOVED WITH SUCCESS !";
             }
             return "PERSON NOT FOUND !";

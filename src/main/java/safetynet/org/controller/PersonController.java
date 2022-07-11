@@ -2,10 +2,13 @@ package safetynet.org.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import safetynet.org.dto.PersonDto;
 import safetynet.org.model.Person;
 import safetynet.org.repository.PersonRepository;
+import safetynet.org.service.PersonService;
 
 import java.util.List;
 @Slf4j
@@ -16,7 +19,7 @@ public class PersonController {
 
     // Declare attributes
     @Autowired
-   private PersonRepository personRepository;
+   private PersonService personService;
 
 
     // Get HTTP Method
@@ -24,7 +27,7 @@ public class PersonController {
     @RequestMapping(value = "/person", method = RequestMethod.GET)
     @ResponseBody
     public List<PersonDto> getPerson(){
-        return personRepository.getAllPerson();
+        return personService.getAllPerson();
     }
 
     // "Post HTTP Method
@@ -33,7 +36,7 @@ public class PersonController {
     public String addPerson(@RequestBody Person person){
         try{
             // Add new Person...
-            personRepository.addPerson(person);
+            personService.addPerson(person);
             return "SUCCESS !";
         }catch (Exception e){
             log.error(">>> ERROR: {}", e.getMessage());
@@ -47,7 +50,7 @@ public class PersonController {
     public String updatePerson(@RequestBody Person person){
         // Update Existing Person...
         try{
-            if(personRepository.updatePerson(person)){
+            if(personService.updatePerson(person)){
                 return "UPDATED WITH SUCCESS !";
             }
             return "PERSON NOT FOUND !";
@@ -58,18 +61,18 @@ public class PersonController {
     }
 
     // Delete HTTP Method
-    @RequestMapping(value = "/person/{email}", method = RequestMethod.DELETE)
+    // exemple: /person/firstName+lastName
+    @RequestMapping(value = "/person/{nameInformation}", method = RequestMethod.DELETE)
     @ResponseBody
-    public String removePerson(@PathVariable String email){
-        try{
+    public ResponseEntity<String> removePerson(@PathVariable String nameInformation){
+        String[] tab = nameInformation.split("\\+");
+        String firstName = tab[0];
+        String lastName = tab[1];
             // Delete new Person...
-            if (personRepository.deletePersonByEmail(email)){
-                return "REMOVED WITH SUCCESS !";
+            if (personService.deletePerson(firstName, lastName)){
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body("REMOVED WITH SUCCESS !");
             }
-            return "PERSON NOT FOUND !";
-        }catch (Exception e){
-            log.error(">>> ERROR: {}", e.getMessage());
-            return "ERROR !";
-        }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PERSON NOT FOUND !");
+
     }
 }
