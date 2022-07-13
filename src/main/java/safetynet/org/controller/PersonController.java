@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import safetynet.org.dto.PersonDto;
 import safetynet.org.model.Person;
-import safetynet.org.repository.PersonRepository;
 import safetynet.org.service.PersonService;
 
 import java.util.List;

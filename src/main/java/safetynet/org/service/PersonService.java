@@ -9,7 +9,9 @@ import safetynet.org.model.Person;
 import safetynet.org.repository.PersonRepository;
 
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Slf4j
@@ -36,6 +38,24 @@ public class PersonService {
     public boolean deletePerson(String firstName, String lastName) {
         return personRepository.deletePerson(firstName, lastName);
     }
+
+
+    public List<PersonDto> getPersonsByCity(String city) {
+        List<PersonDto> persons = new ArrayList<>();
+
+
+        try{
+            persons = personRepository.getAllPerson().stream()
+                    .filter(p -> p.getCity().equalsIgnoreCase(city)).collect(Collectors.toList());
+
+        }
+        catch (Exception e){
+            log.error("error {}",e.getMessage());
+        }
+        return persons;
+
+    }
+
 }
 
 

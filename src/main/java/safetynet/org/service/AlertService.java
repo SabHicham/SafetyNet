@@ -2,6 +2,7 @@ package safetynet.org.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import safetynet.org.dto.PersonDto;
 import safetynet.org.model.Person;
 
 import java.util.List;
@@ -23,8 +24,8 @@ public class AlertService {
 
     public List<String> communityEmail(String city){
         //récupérer toutes les personnes par rapport à une ville
-        List<Person> listePersonByCity = personService.getPersonsByCity(city);
-        List<String> listEmailOfPersonByCity = listePersonByCity.stream().map(Person::getEmail).collect(Collectors.toList());
+        List<PersonDto> listePersonByCity = personService.getPersonsByCity(city);
+        List<String> listEmailOfPersonByCity = listePersonByCity.stream().map(PersonDto::getEmail).collect(Collectors.toList());
     return listEmailOfPersonByCity;
     }
 }

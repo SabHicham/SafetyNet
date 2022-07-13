@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import safetynet.org.dto.MedicalRecordDto;
 import safetynet.org.model.MedicalRecord;
-import safetynet.org.repository.MedicalRecordRepository;
 import safetynet.org.service.MedicalRecordService;
 
 import java.util.List;
