@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import safetynet.org.dto.PersonDto;
+import safetynet.org.exception.RessourceNotFoundException;
 import safetynet.org.model.Person;
 import safetynet.org.repository.PersonRepository;
 
@@ -40,19 +41,14 @@ public class PersonService {
     }
 
 
-    public List<PersonDto> getPersonsByCity(String city) {
-        List<PersonDto> persons = new ArrayList<>();
-
-
-        try{
-            persons = personRepository.getAllPerson().stream()
+    public List<PersonDto> getPersonsByCity(String city) throws RessourceNotFoundException {
+        List<PersonDto> persons =  personRepository.getAllPerson().stream()
                     .filter(p -> p.getCity().equalsIgnoreCase(city)).collect(Collectors.toList());
 
-        }
-        catch (Exception e){
-            log.error("error {}",e.getMessage());
-        }
-        return persons;
+        if(persons.isEmpty()){
+            String error = String.format("Aucun résident trouvé pour la  ville %s",city);
+            throw new RessourceNotFoundException(error);
+        } else return persons;
 
     }
 

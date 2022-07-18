@@ -2,8 +2,11 @@ package safetynet.org.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import safetynet.org.exception.RessourceNotFoundException;
 import safetynet.org.service.AlertService;
 
 import java.util.ArrayList;
@@ -18,17 +21,11 @@ public class AlertController {
 
   @RequestMapping(value = "/communityEmail", method = RequestMethod.GET)
   @ResponseBody
-  public List<String> communityEmail(@RequestParam(required = true) String city){
-    List<String> emails = new ArrayList<>();
-    try {
-      if (city != null){
-        return alertService.communityEmail(city);
-      }
-    }
-    catch (Exception e){
-      log.error("error {}",e.getMessage());
-    }
-    return emails;
-  }
+  public ResponseEntity<List<String>> communityEmail(@RequestParam(required = true) String city) throws RessourceNotFoundException {
+
+        return ResponseEntity.status(HttpStatus.OK).body(alertService.communityEmail(city));
+
 
 }
+}
+
