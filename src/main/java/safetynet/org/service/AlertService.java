@@ -2,11 +2,13 @@ package safetynet.org.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import safetynet.org.dto.FireStationDto;
 import safetynet.org.dto.PersonDto;
 import safetynet.org.exception.RessourceNotFoundException;
 import safetynet.org.model.Person;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,4 +39,11 @@ public class AlertService {
     // les informations spécifiques suivantes : prénom, nom, adresse, numéro de téléphone.
     // De plus, elle doit fournir un décompte du nombre d'adultes et du nombre d'enfants
     // (tout individu âgé de 18 ans ou moins) dans la zone desservie.
+    public List<PersonDto> personByStationNumber(int stationNumber) throws RessourceNotFoundException {
+        FireStationDto fireStationDto = fireStationService.getFireStationByNumber(stationNumber);
+        List<PersonDto> persons = personService.getAllPerson().stream().filter(
+                personDto -> fireStationDto.getAddress().equalsIgnoreCase(personDto.getAddress())
+        ).collect(Collectors.toList());
+        return persons;
+    }
 }

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import safetynet.org.dto.PersonDto;
 import safetynet.org.exception.RessourceNotFoundException;
 import safetynet.org.service.AlertService;
 
@@ -17,15 +18,24 @@ import java.util.List;
 public class AlertController {
 
 @Autowired
-  private AlertService alertService;
+    private AlertService alertService;
 
-  @RequestMapping(value = "/communityEmail", method = RequestMethod.GET)
-  @ResponseBody
-  public ResponseEntity<List<String>> communityEmail(@RequestParam(required = true) String city) throws RessourceNotFoundException {
+    @RequestMapping(value = "/communityEmail", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<String>> communityEmail(@RequestParam(required = true) String city) throws RessourceNotFoundException {
 
         return ResponseEntity.status(HttpStatus.OK).body(alertService.communityEmail(city));
 
 
-}
+    }
+    @RequestMapping(value = "/firestation/stationNumber", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<List<PersonDto>> personByStationNumber(@RequestParam(required = true) int stationNumber) throws RessourceNotFoundException {
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(alertService.personByStationNumber(stationNumber));
+
+
+    }
 }
 

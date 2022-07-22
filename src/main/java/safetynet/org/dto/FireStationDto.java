@@ -15,5 +15,6 @@ public class FireStationDto {
         this.station=station;
 
     }
+    public FireStationDto() {}
 
 }
