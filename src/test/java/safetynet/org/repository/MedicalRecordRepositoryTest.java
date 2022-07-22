@@ -3,8 +3,10 @@ package safetynet.org.repository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import safetynet.org.dto.MedicalRecordDto;
 import safetynet.org.model.FireStation;
 import safetynet.org.model.MedicalRecord;
+import safetynet.org.model.Person;
 
 
 import java.util.ArrayList;
@@ -14,49 +16,90 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MedicalRecordRepositoryTest {
 
-    @Mock
-    private static MedicalRecord medicalRecord;
+
+
+
+    private  MedicalRecordRepository medicalRecordRepository;
 
     @BeforeEach
-    private void setUp(){
-        MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepository();
-        List<MedicalRecord> medicalRecordList = new ArrayList<>();
+    private void setUp() {
+        MedicalRecord medicalRecord = new MedicalRecord();
+        medicalRecord.setFirstName("hicham");
+        medicalRecord.setLastName("john");
+
+        medicalRecordRepository = new MedicalRecordRepository();
+        medicalRecordRepository.addMedicalRecord(medicalRecord);
     }
+
 
     @Test
     public void updateMedicalRecordTest(){
-        MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepository();
+
         MedicalRecord medicalRecord = new MedicalRecord();
-        List<MedicalRecord> medicalRecordList = new ArrayList<>();
+        medicalRecord.setFirstName("hicham");
+        medicalRecord.setLastName("john");
 
         // WHEN
         boolean value = medicalRecordRepository.updateMedicalRecord(medicalRecord);
         // THEN
-        assertEquals(1,1);
+        assertTrue(value);
+
+    }
+    @Test
+    public void updateMedicalRecordTest2(){
+
+        MedicalRecord medicalRecord = new MedicalRecord();
+        medicalRecord.setFirstName("hi");
+        medicalRecord.setLastName("john");
+
+        // WHEN
+        boolean value = medicalRecordRepository.updateMedicalRecord(medicalRecord);
+        // THEN
+        assertFalse(value);
 
     }
     @Test
     public void getAllMedicalRecordTest() {
         // GIVEN
-        MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepository();
-        MedicalRecord medicalRecord = new MedicalRecord();
+
+
 
         // WHEN
-        boolean value = medicalRecordRepository.updateMedicalRecord(medicalRecord);
+
+
+        List<MedicalRecordDto> list = medicalRecordRepository.getAllMedicalRecord();
         // THEN
-        assertEquals(1,1);
+        assertEquals(1, list.size());
     }
 
-    /*@Test
-    public void deletePersonTest(String firstName, String lastName){
+    @Test
+    public void deletePersonTest(){
         // GIVEN
-        MedicalRecordRepository medicalRecordRepository = new MedicalRecordRepository();
+
 
         // WHEN
-        medicalRecordRepository.deleteMedicalRecord(firstName, lastName);
-        // THEN
-        assertEquals(1,1);
+        boolean value = medicalRecordRepository.deleteMedicalRecord("hicham", "john");
 
-    }*/
+
+
+        // THEN
+        assertTrue(value);
+
+    }
+
+    @Test
+    public void deletePersonTest2(){
+        // GIVEN
+
+
+        // WHEN
+        boolean value = medicalRecordRepository.deleteMedicalRecord("m", "john");
+
+
+
+        // THEN
+        assertTrue(value);
+
+    }
 
 }

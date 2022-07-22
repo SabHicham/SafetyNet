@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import safetynet.org.dto.FireStationDto;
+import safetynet.org.dto.PersonDto;
 import safetynet.org.model.FireStation;
 
 
@@ -19,27 +21,43 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class FireStationRepositoryTest {
 
-    @Mock
-    private static FireStation fireStation;
+    private FireStationRepository fireStationRepository;
+
 
 
     @BeforeEach
     private void setUp(){
-        FireStationRepository fireStationRepository = new FireStationRepository();
-        List<FireStation> fireStationList = new ArrayList<>();
+        FireStation fireStation = new FireStation();
+        fireStation.setAddress("1 rue de la paix");
+        fireStation.setStation(1);
+
+        fireStationRepository = new FireStationRepository();
+        fireStationRepository.addFireStation(fireStation);
     }
 
 
     @Test
     public void updateFireStationTest() {
         // GIVEN
-        FireStationRepository fireStationRepository = new FireStationRepository();
         FireStation fireStation = new FireStation();
-        List<FireStation> fireStationList = new ArrayList<>();
+        fireStation.setAddress("1 rue de la paix");
+        fireStation.setStation(1);
 
-        //String key = fireStation.getAddress();
 
-        //when(fireStation.getAddress()).thenReturn(key);
+
+        // WHEN
+        boolean value = fireStationRepository.updateFireStation(fireStation);
+        // THEN
+        assertTrue(value);
+    }
+
+    @Test
+    public void updateFireStationTestReturnFalse() {
+        // GIVEN
+        FireStation fireStation = new FireStation();
+        fireStation.setAddress("3 rue de la paix");
+        fireStation.setStation(3);
+
 
 
         // WHEN
@@ -49,27 +67,46 @@ class FireStationRepositoryTest {
     }
 
     @Test
-    public void deleteFireStationByAddressOrStationTest() {
+    public void deletePersonTest() {
         // GIVEN
-        FireStationRepository fireStationRepository = new FireStationRepository();
-        FireStation fireStation = new FireStation();
+
+
+
 
         // WHEN
-        boolean value = fireStationRepository.updateFireStation(fireStation);
+        boolean value = fireStationRepository.deleteFireStationByAddressOrStation("1 rue de la paix", 1);
+
         // THEN
-        assertEquals(1, 1);
+        assertTrue(value);
+
     }
 
-   /* @Test
-    public void getAllFireStationTest() {
+    @Test
+    public void deletePersonTest2() {
         // GIVEN
-        FireStationRepository fireStationRepository = new FireStationRepository();
+
+
+
 
         // WHEN
-        boolean value = fireStationRepository.updateFireStation();
+        boolean value = fireStationRepository.deleteFireStationByAddressOrStation("2 rue de la paix", 2);
 
         // THEN
-        assertEquals(1, 1);
-    }*/
+        assertTrue(value);
+
+    }
+
+
+    @Test
+    public void getAllFireStationTest() {
+        // GIVEN
+
+
+        // WHEN
+        List<FireStationDto> list = fireStationRepository.getAllFireStation();
+
+        // THEN
+        assertEquals(1, list.size());
+    }
 
 }

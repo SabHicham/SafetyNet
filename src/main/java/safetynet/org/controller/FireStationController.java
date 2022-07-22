@@ -62,9 +62,9 @@ public class FireStationController {
     }
 
     // Delete HTTP Method
-    @RequestMapping(value = "/firestation/station", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/firestation/station/{address}/{station}", method = RequestMethod.DELETE)
     @ResponseBody
-    public String removeFireStation(@PathVariable String address, int station){
+    public String removeFireStation(@PathVariable("address") String address, @PathVariable("station") int station){
         try{
             // Delete new FireStation...
             if (fireStationService.deleteFireStationByAddressOrStation(address, station)){

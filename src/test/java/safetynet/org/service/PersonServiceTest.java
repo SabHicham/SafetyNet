@@ -1,5 +1,6 @@
 package safetynet.org.service;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -115,6 +116,42 @@ class PersonServiceTest {
 
 
     }
+    @Test
+    void deletePersonTest(){
+        // WHEN
+        personService.deletePerson("John","Bob");
+        // THEN
+        verify(personRepository, times(1)).deletePerson("John","Bob");
+    }
 
+    @Test
+    void updatePersonTest(){
+        Person person = new Person();
+        personService.updatePerson(person);
+
+        // THEN
+        verify(personRepository, times(1)).updatePerson(person);
+
+    }
+
+    @Test
+    void elseReturnTest() throws RessourceNotFoundException {
+        //GIVEN
+
+        PersonDto personDto = new PersonDto("abcd", "efgh",
+                "1 rue de la paix ", "Paris", "75000", "01020304",
+                "hicham@email.com");
+
+        when(personRepository.getAllPerson()).thenReturn(List.of(personDto));
+
+        //WHEN
+
+        List<PersonDto> list = personService.getPersonsByCity("Paris");
+
+
+        //THEN
+
+        assertEquals(1, list.size());
+    }
 
 }

@@ -1,12 +1,15 @@
 package safetynet.org.service;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import safetynet.org.dto.PersonDto;
-import safetynet.org.exception.RessourceNotFoundException;
-import safetynet.org.model.Person;
-import safetynet.org.repository.PersonRepository;
+import org.mockito.junit.jupiter.MockitoExtension;
+import safetynet.org.dto.MedicalRecordDto;
+
+import safetynet.org.model.MedicalRecord;
+
+import safetynet.org.repository.MedicalRecordRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,57 +18,59 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class MedicalRecordServiceTest {
     @InjectMocks
-    private PersonService personService;
+    private MedicalRecordService medicalRecordService;
 
     @Mock
-    private PersonRepository personRepository;
+    private MedicalRecordRepository medicalRecordRepository;
 
     @Test
-    void testGetAllPerson() {
+    void getAllMedicalRecordTest() {
 
-        PersonDto personDto = new PersonDto(
+
+        MedicalRecordDto medicalRecordDto = new MedicalRecordDto(
                 "John",
-                "Bob",
-                "2 rue des sources",
-                "New-york",
-                "75000",
-                "01020304",
-                "john@gmail.com"
-        );
+                "Boyd",
+                "03/06/1984",
+                List.of("x", "x"),
+                List.of("x", "x")
 
-        List<PersonDto> personList = new ArrayList<>();
-        personList.add(personDto);
+                );
 
-        when(personRepository.getAllPerson()).thenReturn(personList);
+        List<MedicalRecordDto> medicalRecordList = new ArrayList<>();
+        medicalRecordList.add(medicalRecordDto);
+
+        when(medicalRecordRepository.getAllMedicalRecord()).thenReturn(medicalRecordList);
 
         // WHEN
-        List<PersonDto> personDtoList = personService.getAllPerson();
+        List<MedicalRecordDto> medicalRecordDtoList = medicalRecordService.getAllMedicalRecord();
+
         // THEN
-        assertEquals(1,personDtoList.size());
+        assertEquals(1,medicalRecordDtoList.size());
     }
 
     @Test
-    void testAddPerson() {
+    void addMedicalRecordTest() {
 
-        Person person = new Person();
-        person.setFirstName("John");
-        person.setLastName("Bob");
-        person.setAddress("address");
-        person.setCity(("city"));
-        person.setZip("zip");
-        person.setPhone("a");
-        person.setEmail("email");
+        MedicalRecord medicalRecord = new MedicalRecord();
+        medicalRecord.setFirstName("John");
+        medicalRecord.setLastName("Bob");
+        medicalRecord.setBirthdate("03/06/1984");
+        medicalRecord.setMedications(List.of("x", "x"));
+        medicalRecord.setAllergies(List.of("x", "x"));
+
+
 
         // WHEN
-        personService.addPerson(person);
+        medicalRecordService.addMedicalRecord(medicalRecord);
         // THEN
-        verify(personRepository, times(1)).addPerson(person);
+        verify(medicalRecordRepository, times(1)).addMedicalRecord(medicalRecord);
     }
 
 
-    @Test
+    /*@Test
     void testGetPersonByCity(){
 
         PersonDto personDto = new PersonDto(
@@ -82,9 +87,9 @@ class MedicalRecordServiceTest {
         personList.add(personDto);
 
         String city = "Paris";
-    }
+    }*/
 
-    @Test
+    /*@Test
     void testGetPersonByCityWithNoResident() {
 
         PersonDto personDto = new PersonDto(
@@ -111,6 +116,6 @@ class MedicalRecordServiceTest {
         });
 
 
-    }
+    }*/
 
 }

@@ -61,17 +61,18 @@ public class PersonController {
 
     // Delete HTTP Method
     // exemple: /person/firstName+lastName
-    @RequestMapping(value = "/person/{nameInformation}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/person", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<String> removePerson(@PathVariable String nameInformation){
-        String[] tab = nameInformation.split("\\+");
-        String firstName = tab[0];
-        String lastName = tab[1];
-            // Delete new Person...
-            if (personService.deletePerson(firstName, lastName)){
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body("REMOVED WITH SUCCESS !");
+    public String removePerson(@RequestBody Person person){
+        try{
+            //Delete new Person...
+            if (personService.deletePerson(person.getFirstName(), person.getLastName())){
+                return "REMOVED WITH SUCCESS !";
             }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PERSON NOT FOUND !");
-
+            return "PERSON NOT FOUND !";
+        }catch (Exception e){
+            log.error(">>> ERROR: {}", e.getMessage());
+            return "ERROR !";
+        }
     }
 }
