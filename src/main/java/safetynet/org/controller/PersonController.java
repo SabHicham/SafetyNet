@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import safetynet.org.dto.PersonDto;
+import safetynet.org.dto.PersonWithMedicalRecordDto;
 import safetynet.org.model.Person;
 import safetynet.org.service.PersonService;
 
@@ -61,17 +62,24 @@ public class PersonController {
 
     // Delete HTTP Method
     // exemple: /person/firstName+lastName
-    @RequestMapping(value = "/person/{nameInformation}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/person", method = RequestMethod.DELETE)
     @ResponseBody
-    public ResponseEntity<String> removePerson(@PathVariable String nameInformation){
-        String[] tab = nameInformation.split("\\+");
-        String firstName = tab[0];
-        String lastName = tab[1];
-            // Delete new Person...
-            if (personService.deletePerson(firstName, lastName)){
-                return ResponseEntity.status(HttpStatus.ACCEPTED).body("REMOVED WITH SUCCESS !");
+    public String removePerson(@RequestBody Person person){
+        try{
+            //Delete new Person...
+            if (personService.deletePerson(person.getFirstName(), person.getLastName())){
+                return "REMOVED WITH SUCCESS !";
             }
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("PERSON NOT FOUND !");
+            return "PERSON NOT FOUND !";
+        }catch (Exception e){
+            log.error(">>> ERROR: {}", e.getMessage());
+            return "ERROR !";
+        }
+    }// Get HTTP Method
 
+    @RequestMapping(value = "/personInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public List<PersonWithMedicalRecordDto> getPersonInfo(@RequestParam(required = true) String firstName, @RequestParam(required = true) String lastName){
+        return personService.getPersonInfo(firstName, lastName);
     }
 }

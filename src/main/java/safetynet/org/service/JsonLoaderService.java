@@ -91,9 +91,9 @@ public class JsonLoaderService {
             MedicalRecord medicalRecord = new MedicalRecord();
             medicalRecord.setFirstName(nodeMedicalRecord.path("firstName").asText());
             medicalRecord.setLastName(nodeMedicalRecord.path("lastName").asText());
-            medicalRecord.setLastName(nodeMedicalRecord.path("birthdate").asText());
-            medicalRecord.setLastName(nodeMedicalRecord.path("medications").asText());
-            medicalRecord.setLastName(nodeMedicalRecord.path("allergies").asText());
+            medicalRecord.setBirthdate(nodeMedicalRecord.path("birthdate").asText());
+            medicalRecord.setMedications(nodeMedicalRecord.findValuesAsText("medications"));
+            medicalRecord.setAllergies(nodeMedicalRecord.findValuesAsText("allergies"));
 
             medicalRecordRepository.addMedicalRecord(medicalRecord);
         }

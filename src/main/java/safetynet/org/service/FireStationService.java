@@ -5,11 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import safetynet.org.dto.FireStationDto;
+import safetynet.org.exception.RessourceNotFoundException;
 import safetynet.org.model.FireStation;
 import safetynet.org.repository.FireStationRepository;
 
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,4 +36,28 @@ public class FireStationService {
     public boolean deleteFireStationByAddressOrStation(String address, int station) {
         return fireStationRepository.deleteFireStationByAddressOrStation(address, station);
     }
+
+    public FireStationDto getFireStationByNumber(int numberStation) throws RessourceNotFoundException {
+        Optional<FireStationDto> fsd = fireStationRepository.getAllFireStation().stream().filter(fireStationDto
+                -> fireStationDto.getStation() == numberStation).findFirst();
+        if (fsd.isPresent()) {
+            FireStationDto fireStation = fsd.get();
+            return fireStation;
+        }
+
+        String error = String.format("Aucune station n'a été trouvée dont le numéro %s", numberStation);
+        throw new RessourceNotFoundException(error);
+
+    }
+    public List<String> getAddressesByStations(List<Integer> stationsNumbers){
+        List<String> fsd = fireStationRepository.getAllFireStation().stream()
+                .filter(fireStationDto -> stationsNumbers.contains(fireStationDto.getStation()))
+                .map(FireStationDto::getAddress)
+                .collect(Collectors.toList());
+        return fsd;
+
+    }
+
+
+
 }

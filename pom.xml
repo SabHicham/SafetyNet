@@ -102,6 +102,13 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.5</version>
+				<configuration>
+					<excludes>
+						<exclude>safetynet/org/dto/*</exclude>
+						<exclude>safetynet/org/model/*</exclude>
+					</excludes>
+				</configuration>
+
 				<executions>
 					<execution>
 						<id>default-prepare-agent</id>
@@ -118,6 +125,11 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.9.1</version>
+			</plugin>
 		</plugins>
 	</build>
 	<reporting>
@@ -129,8 +141,8 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-report-plugin</artifactId>
-				<version>3.0.0-M3</version>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M5</version>
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>

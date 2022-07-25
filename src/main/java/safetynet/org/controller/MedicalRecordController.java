@@ -19,7 +19,7 @@ public class MedicalRecordController {
     private MedicalRecordService medicalRecordService;
 
     // Get HTTP Method
-    @RequestMapping(value = "/medicalrecord", method = RequestMethod.GET)
+    @RequestMapping(value = "/medicalRecord", method = RequestMethod.GET)
     @ResponseBody
     public List<MedicalRecordDto> getMedicalRecord(){
         return medicalRecordService.getAllMedicalRecord();
@@ -27,7 +27,7 @@ public class MedicalRecordController {
     }
 
     // Post HTTP Method
-    @RequestMapping(value = "/medicalrecord", method = RequestMethod.POST)
+    @RequestMapping(value = "/medicalRecord", method = RequestMethod.POST)
     @ResponseBody
     public String addMedicalRecord(@RequestBody MedicalRecord medicalRecord){
         try{
@@ -41,7 +41,7 @@ public class MedicalRecordController {
     }
 
     // Put HTTP Method
-    @RequestMapping(value = "/medicalrecord", method = RequestMethod.PUT)
+    @RequestMapping(value = "/medicalRecord", method = RequestMethod.PUT)
     @ResponseBody
     public String updateMedicalRecord(@RequestBody MedicalRecord medicalRecord){
         //Update Existing MedicalRecord...
@@ -57,7 +57,7 @@ public class MedicalRecordController {
     }
 
     //Delete HTTP Method
-    @RequestMapping(value = "/medicalrecord", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/medicalRecord", method = RequestMethod.DELETE)
     @ResponseBody
     public String removeMedicalRecord(@RequestBody MedicalRecord medicalRecord){
         try{

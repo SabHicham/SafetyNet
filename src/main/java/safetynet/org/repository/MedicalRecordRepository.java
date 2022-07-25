@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import safetynet.org.dto.MedicalRecordDto;
 
+import safetynet.org.exception.RessourceNotFoundException;
 import safetynet.org.model.MedicalRecord;
 
 
@@ -11,6 +12,7 @@ import safetynet.org.model.MedicalRecord;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -62,4 +64,17 @@ public class MedicalRecordRepository {
         return true;
     }
 
+    public MedicalRecordDto getMedicalRecordFromFirstAndLastName(String firstName, String lastName) throws RessourceNotFoundException {
+        Optional<MedicalRecord> medicalRecordOptional  = medicalRecordList.stream().filter((medicalRecord)
+                -> Objects.equals(medicalRecord.getFirstName(), firstName)&& Objects.equals (medicalRecord.getLastName(), lastName))
+                .findFirst();
+        if (medicalRecordOptional.isPresent()){
+            final MedicalRecord mr = medicalRecordOptional.get();
+            return  new MedicalRecordDto(mr.getFirstName(),
+                    mr.getLastName(), mr.getBirthdate(), mr.getMedications(),
+                    mr.getAllergies());
+        }
+        String error = String.format("Aucune medicalRecord n'a été trouvée pour %s %s",firstName, lastName );
+        throw new RessourceNotFoundException(error);
+    }
 }
