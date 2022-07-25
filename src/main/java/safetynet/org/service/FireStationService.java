@@ -12,6 +12,7 @@ import safetynet.org.repository.FireStationRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -44,8 +45,19 @@ public class FireStationService {
             return fireStation;
         }
 
-        String error = String.format("Aucune station n'a été trouvée dont le numéro %s",numberStation);
+        String error = String.format("Aucune station n'a été trouvée dont le numéro %s", numberStation);
         throw new RessourceNotFoundException(error);
 
     }
+    public List<String> getAddressesByStations(List<Integer> stationsNumbers){
+        List<String> fsd = fireStationRepository.getAllFireStation().stream()
+                .filter(fireStationDto -> stationsNumbers.contains(fireStationDto.getStation()))
+                .map(FireStationDto::getAddress)
+                .collect(Collectors.toList());
+        return fsd;
+
+    }
+
+
+
 }

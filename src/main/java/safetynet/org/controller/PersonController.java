@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import safetynet.org.dto.PersonDto;
+import safetynet.org.dto.PersonWithMedicalRecordDto;
 import safetynet.org.model.Person;
 import safetynet.org.service.PersonService;
 
@@ -74,5 +75,11 @@ public class PersonController {
             log.error(">>> ERROR: {}", e.getMessage());
             return "ERROR !";
         }
+    }// Get HTTP Method
+
+    @RequestMapping(value = "/personInfo", method = RequestMethod.GET)
+    @ResponseBody
+    public List<PersonWithMedicalRecordDto> getPersonInfo(@RequestParam(required = true) String firstName, @RequestParam(required = true) String lastName){
+        return personService.getPersonInfo(firstName, lastName);
     }
 }

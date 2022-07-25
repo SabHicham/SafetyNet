@@ -1,4 +1,4 @@
-package safetynet.org.controller;
+package safetynet.org.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -12,6 +12,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import safetynet.org.controller.MedicalRecordController;
 import safetynet.org.dto.MedicalRecordDto;
 import safetynet.org.dto.PersonDto;
 import safetynet.org.service.FireStationService;

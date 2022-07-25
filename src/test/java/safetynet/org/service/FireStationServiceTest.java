@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import safetynet.org.dto.FireStationDto;
+import safetynet.org.exception.RessourceNotFoundException;
 import safetynet.org.model.FireStation;
 
 import safetynet.org.repository.FireStationRepository;
@@ -14,6 +15,7 @@ import safetynet.org.repository.FireStationRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
@@ -59,6 +61,55 @@ class FireStationServiceTest {
         // THEN
         verify(fireStationRepository, times(1)).addFireStation(fireStation);
     }
+
+    @Test
+    void updateFireStationTest() {
+        //GIVEN
+        when(fireStationRepository.updateFireStation(any())).thenReturn(true);
+
+        assertTrue(fireStationService.updateFireStation(null));
+    }
+
+    @Test
+    void deleteFireStationByAddressOrStationTest() {
+        //GIVEN
+        when(fireStationRepository.deleteFireStationByAddressOrStation("", 1)).thenReturn(true);
+
+        assertTrue(fireStationService.deleteFireStationByAddressOrStation("", 1));
+    }
+
+    @Test
+    void getFireStationByNumberTest() throws RessourceNotFoundException {
+        //GIVEN
+        FireStationDto fireStationDto =  new FireStationDto();
+        fireStationDto.setStation(1);
+        when(fireStationRepository.getAllFireStation()).thenReturn(List.of(fireStationDto));
+
+        assertEquals(fireStationDto, fireStationService.getFireStationByNumber(1));
+    }
+
+    @Test
+    void getFireStationByNumberErrorTest() throws RessourceNotFoundException {
+        //GIVEN
+        FireStationDto fireStationDto =  new FireStationDto();
+        fireStationDto.setStation(1);
+        when(fireStationRepository.getAllFireStation()).thenReturn(List.of(fireStationDto));
+
+        assertThatThrownBy(() -> fireStationService.getFireStationByNumber(2)).isInstanceOf(RessourceNotFoundException.class);
+    }
+
+    @Test
+    void getAddressesByStationsTest() {
+        //GIVEN
+        FireStationDto fireStationDto =  new FireStationDto();
+        fireStationDto.setStation(1);
+        fireStationDto.setAddress("1er rue");
+        when(fireStationRepository.getAllFireStation()).thenReturn(List.of(fireStationDto));
+
+        assertEquals(List.of("1er rue"), fireStationService.getAddressesByStations(List.of(1)));
+    }
+
+
 
 
     /*@Test
