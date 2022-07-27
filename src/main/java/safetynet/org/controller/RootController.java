@@ -28,7 +28,7 @@ public class RootController {
      * De plus, elle doit fournir un décompte du nombre d'adultes et du nombre d'enfants (tout individu âgé de 18 ans ou moins) dans la zone desservie.
      * *//*
 
-    // TODO:
+    //
     @RequestMapping(value = "/firestation/stationNumber", method = RequestMethod.GET)
     @ResponseBody
     public JSONArray getPersonCoveredByStation(@RequestParam(required = true) int stationNumber){

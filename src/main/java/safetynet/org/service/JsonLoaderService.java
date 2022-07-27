@@ -15,6 +15,8 @@ import safetynet.org.repository.PersonRepository;
 import javax.annotation.PostConstruct;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -92,7 +94,13 @@ public class JsonLoaderService {
             medicalRecord.setFirstName(nodeMedicalRecord.path("firstName").asText());
             medicalRecord.setLastName(nodeMedicalRecord.path("lastName").asText());
             medicalRecord.setBirthdate(nodeMedicalRecord.path("birthdate").asText());
+
+            List<String> medications = new ArrayList<>();
+            JsonNode medicationsNode = nodeMedicalRecord.get("medications");
+            for (JsonNode medication : medicationsNode)
+                medications.add(medication.asText());
             medicalRecord.setMedications(nodeMedicalRecord.findValuesAsText("medications"));
+            List<String> allergies = new ArrayList<>();
             medicalRecord.setAllergies(nodeMedicalRecord.findValuesAsText("allergies"));
 
             medicalRecordRepository.addMedicalRecord(medicalRecord);
