@@ -7,10 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import safetynet.org.dto.FireStationDto;
-import safetynet.org.dto.MedicalRecordDto;
-import safetynet.org.dto.PersonDto;
-import safetynet.org.dto.PersonWithMedicalRecordDto;
+import safetynet.org.dto.*;
 import safetynet.org.exception.RessourceNotFoundException;
 import safetynet.org.model.MedicalRecord;
 
@@ -67,8 +64,7 @@ class AlertServiceTest {
         when(personService.getAllPerson()).thenReturn(personDtoList);
 
         //WHEN
-        List<PersonDto> personDto = alertService.personByStationNumber(2);
-
+        List<PersonDto> personDto = alertService.personByStationNumber(2).getPersons();
         //THEN
         assertEquals(1, personDto.size());
     }
@@ -81,10 +77,12 @@ class AlertServiceTest {
         );
 
         List<MedicalRecordDto> medicalRecordDtoList = List.of(
-                new MedicalRecordDto("prenom1", "lastName1", "", null, null),
-                new MedicalRecordDto("prenom3", "lastName3", "", null, null)
+                new MedicalRecordDto("prenom1", "lastName1", "02/02/2015", null, null),
+                new MedicalRecordDto("prenom2", "lastName2", "02/02/1989", null, null)
         );
         when(personService.childByAddress("2eme rue")).thenReturn(personDtoList);
+        when(personService.isMajor("02/02/2015")).thenReturn(false);
+        when(personService.isMajor("02/02/1989")).thenReturn(true);
         when(medicalRecordService.getAllMedicalRecord()).thenReturn(medicalRecordDtoList);
 
         //WHEN

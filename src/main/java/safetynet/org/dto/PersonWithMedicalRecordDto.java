@@ -13,17 +13,17 @@ public class PersonWithMedicalRecordDto {
 
     private final String phone;
 
-    private final String birthdate;
+    private final int age;
 
     private final List<String> medications;
 
     private final List<String> allergies;
 
-    public PersonWithMedicalRecordDto(String firstName, String lastName, String phone, String birthdate, List<String> medications, List<String> allergies) {
+    public PersonWithMedicalRecordDto(String firstName, String lastName, String phone, int age, List<String> medications, List<String> allergies) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
-        this.birthdate = birthdate;
+        this.age = age;
         this.medications = medications;
         this.allergies = allergies;
     }

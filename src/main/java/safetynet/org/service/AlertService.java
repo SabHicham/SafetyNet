@@ -4,13 +4,15 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import safetynet.org.dto.FireStationDto;
-import safetynet.org.dto.MedicalRecordDto;
-import safetynet.org.dto.PersonDto;
-import safetynet.org.dto.PersonWithMedicalRecordDto;
+import safetynet.org.dto.*;
 import safetynet.org.exception.RessourceNotFoundException;
 import safetynet.org.model.MedicalRecord;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,8 +34,9 @@ public class AlertService {
     public List<String> communityEmail(String city) throws RessourceNotFoundException {
         //récupérer toutes les personnes par rapport à une ville
         List<PersonDto> listePersonByCity = personService.getPersonsByCity(city);
-        List<String> listEmailOfPersonByCity = listePersonByCity.stream().map(PersonDto::getEmail).collect(Collectors.toList());
-        return listEmailOfPersonByCity;
+        HashSet<String> hashSetEmailOfPersonByCity = new HashSet<>();
+        listePersonByCity.forEach((item) -> hashSetEmailOfPersonByCity.add(item.getEmail()));
+        return new ArrayList<>(hashSetEmailOfPersonByCity);
     }
 
     //http://localhost:8080/firestation?stationNumber=<station_number>
@@ -43,12 +46,34 @@ public class AlertService {
     // les informations spécifiques suivantes : prénom, nom, adresse, numéro de téléphone.
     // De plus, elle doit fournir un décompte du nombre d'adultes et du nombre d'enfants
     // (tout individu âgé de 18 ans ou moins) dans la zone desservie.
-    public List<PersonDto> personByStationNumber(int stationNumber) throws RessourceNotFoundException {
+    public PersonWithAgeCountDto personByStationNumber(int stationNumber) throws RessourceNotFoundException {
         FireStationDto fireStationDto = fireStationService.getFireStationByNumber(stationNumber);
         List<PersonDto> persons = personService.getAllPerson().stream().filter(
                 personDto -> fireStationDto.getAddress().equalsIgnoreCase(personDto.getAddress())
         ).collect(Collectors.toList());
-        return persons;
+
+
+        final List<Integer> ages = persons.stream().map((personDto) -> {
+            try {
+                final MedicalRecordDto medicalRecordDto = medicalRecordService.getMedicalRecordFromFirstAndLastName(personDto.getFirstName(), personDto.getLastName());
+
+                return personService.isMajor(medicalRecordDto.getBirthdate()) ? 1 : -1;
+            } catch (RessourceNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
+
+        final int adultCount = ages.stream().filter((item) -> item == 1).mapToInt(Integer::intValue).sum();
+        final int childCount = ages.stream().filter((item) -> item == -1).mapToInt(Integer::intValue).sum() * -1;
+        return new PersonWithAgeCountDto(persons, adultCount, childCount);
+    }
+
+    private int calculateAge(LocalDate birthDate, LocalDate currentDate) {
+        if ((birthDate != null) && (currentDate != null)) {
+            return Period.between(birthDate, currentDate).getYears();
+        } else {
+            return 0;
+        }
     }
     //http://localhost:8080/childAlert?address=<address>
     //Cette url doit retourner une liste d'enfants (tout individu âgé de 18 ans ou moins) habitant à cette adresse.
@@ -66,11 +91,14 @@ public class AlertService {
                     .findAny().orElse(null);
             if (medicalRecordDto != null) {
                 if (!personService.isMajor(medicalRecordDto.getBirthdate())) {
+                    final LocalDate birthDate = LocalDate.parse(medicalRecordDto.getBirthdate(), DateTimeFormatter.ofPattern("MM/dd/yyyy"));
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("firstName", personDto.getFirstName());
                     jsonObject.put("lastName", personDto.getLastName());
                     jsonObject.put("address", personDto.getAddress());
                     jsonObject.put("phone", personDto.getPhone());
+                    jsonObject.put("age", calculateAge(birthDate, LocalDate.now()));
+                    jsonObject.put("foyer", getFoyer(persons));
                     jsonArray.add(jsonObject);
                 }
 
@@ -80,6 +108,30 @@ public class AlertService {
         return jsonArray;
 
     }
+
+    private JSONArray getFoyer(List<PersonDto> persons) {
+        JSONArray jsonArray = new JSONArray();
+        for (PersonDto personDto : persons) {
+            MedicalRecordDto medicalRecordDto = medicalRecordService.getAllMedicalRecord().stream()
+                    .filter(medicalRecord -> (personDto.getFirstName() + "." + personDto.getLastName()).equalsIgnoreCase(medicalRecord.getFirstName() + "." + medicalRecord.getLastName()))
+                    .findAny().orElse(null);
+            if (medicalRecordDto != null) {
+                if (personService.isMajor(medicalRecordDto.getBirthdate())) {
+                    final LocalDate birthDate = LocalDate.parse(medicalRecordDto.getBirthdate(), DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("firstName", personDto.getFirstName());
+                    jsonObject.put("lastName", personDto.getLastName());
+                    jsonObject.put("address", personDto.getAddress());
+                    jsonObject.put("phone", personDto.getPhone());
+                    jsonObject.put("age", calculateAge(birthDate, LocalDate.now()));
+                    jsonArray.add(jsonObject);
+                }
+
+            }
+
+        }
+        return jsonArray;
+    }
     // http://localhost:8080/phoneAlert?firestation=<firestation_number>
     // Cette url doit retourner une liste des numéros de téléphone des résidents desservis
     // par la caserne de pompiers. Nous l'utiliserons pour envoyer des messages texte d'urgence à
@@ -87,10 +139,10 @@ public class AlertService {
 
     public List<String> phoneByStation(int stationNumber) throws RessourceNotFoundException {
         List<String> stationAddress = fireStationService.getAddressesByStations(List.of(stationNumber));
-        List<String> phones = personService.getAllPerson().stream().filter(
+
+        return personService.getAllPerson().stream().filter(
                         personDto -> stationAddress.contains(personDto.getAddress()))
-                .map(PersonDto::getPhone).collect(Collectors.toList());
-        return phones;
+                .map(PersonDto::getPhone).distinct().collect(Collectors.toList());
 
 
     }
@@ -113,12 +165,17 @@ public class AlertService {
                     .filter(medicalRecord -> (personDto.getFirstName() + "." + personDto.getLastName()).equalsIgnoreCase(medicalRecord.getFirstName() + "." + medicalRecord.getLastName()))
                     .findAny().orElse(null);
             JSONObject jsonObject = new JSONObject();
+
+            final LocalDate birthDate = medicalRecordDto != null ? LocalDate.parse(medicalRecordDto.getBirthdate(), DateTimeFormatter.ofPattern("MM/dd/yyyy")) : null;
+
             jsonObject.put("stationNumber", stationNumber);
             jsonObject.put("firstName", personDto.getFirstName());
             jsonObject.put("phone", personDto.getPhone());
-            //jsonObject.put("birthDate", medicalRecordDto.getBirthdate());
-            //jsonObject.put("medications", medicalRecordDto.getMedications());
-            //jsonObject.put("allergies", medicalRecordDto.getAllergies());
+            if (birthDate != null) {
+                jsonObject.put("age", calculateAge(birthDate, LocalDate.now()));
+            }
+            jsonObject.put("medications", medicalRecordDto.getMedications());
+            jsonObject.put("allergies", medicalRecordDto.getAllergies());
             jsonArray.add(jsonObject);
 
         }
@@ -137,8 +194,9 @@ public class AlertService {
                 .filter(personDto -> stationAddress.contains(personDto.getAddress()))
                 .map(personDto -> {
                     try {
-                        MedicalRecordDto medicalRecordDto = medicalRecordService.getMedicalRecordFromFirstAndLastName(personDto.getFirstName(), personDto.getLastName());
-                        return new PersonWithMedicalRecordDto(personDto.getFirstName(), personDto.getLastName(), personDto.getPhone(), medicalRecordDto.getBirthdate(), medicalRecordDto.getMedications(), medicalRecordDto.getAllergies());
+                        final MedicalRecordDto medicalRecordDto = medicalRecordService.getMedicalRecordFromFirstAndLastName(personDto.getFirstName(), personDto.getLastName());
+                        final LocalDate birthDate = LocalDate.parse(medicalRecordDto.getBirthdate(), DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+                        return new PersonWithMedicalRecordDto(personDto.getFirstName(), personDto.getLastName(), personDto.getPhone(), calculateAge(birthDate, LocalDate.now()), medicalRecordDto.getMedications(), medicalRecordDto.getAllergies());
                     } catch (RessourceNotFoundException e) {
                         throw new RuntimeException(e);
                     }

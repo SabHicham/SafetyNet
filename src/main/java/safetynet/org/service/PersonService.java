@@ -100,8 +100,9 @@ public class PersonService {
                 .filter(personDto -> Objects.equals(firstname, personDto.getFirstName()) && Objects.equals(lastname, personDto.getLastName()))
                 .map(personDto -> {
                     try {
-                        MedicalRecordDto medicalRecordDto = medicalRecordService.getMedicalRecordFromFirstAndLastName(personDto.getFirstName(), personDto.getLastName());
-                        return new PersonWithMedicalRecordDto(personDto.getFirstName(), personDto.getLastName(), personDto.getPhone(), medicalRecordDto.getBirthdate(), medicalRecordDto.getMedications(), medicalRecordDto.getAllergies());
+                        final MedicalRecordDto medicalRecordDto = medicalRecordService.getMedicalRecordFromFirstAndLastName(personDto.getFirstName(), personDto.getLastName());
+                        final LocalDate birthDate = LocalDate.parse(medicalRecordDto.getBirthdate(), DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+                        return new PersonWithMedicalRecordDto(personDto.getFirstName(), personDto.getLastName(), personDto.getPhone(), calculateAge(birthDate, LocalDate.now()), medicalRecordDto.getMedications(), medicalRecordDto.getAllergies());
                     } catch (RessourceNotFoundException e) {
                         throw new RuntimeException(e);
                     }
@@ -110,6 +111,14 @@ public class PersonService {
                 .collect(Collectors.toList());
 
         return personsWithMedicationRecord;
+    }
+
+    private int calculateAge(LocalDate birthDate, LocalDate currentDate) {
+        if ((birthDate != null) && (currentDate != null)) {
+            return Period.between(birthDate, currentDate).getYears();
+        } else {
+            return 0;
+        }
     }
 
 

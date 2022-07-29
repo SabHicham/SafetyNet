@@ -2,6 +2,7 @@ package safetynet.org.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.TextNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -99,9 +100,12 @@ public class JsonLoaderService {
             JsonNode medicationsNode = nodeMedicalRecord.get("medications");
             for (JsonNode medication : medicationsNode)
                 medications.add(medication.asText());
-            medicalRecord.setMedications(nodeMedicalRecord.findValuesAsText("medications"));
+            medicalRecord.setMedications(medications);
             List<String> allergies = new ArrayList<>();
-            medicalRecord.setAllergies(nodeMedicalRecord.findValuesAsText("allergies"));
+            JsonNode allergiesNode = nodeMedicalRecord.get("allergies");
+            for (JsonNode allergieNode : allergiesNode)
+                allergies.add(allergieNode.asText());
+            medicalRecord.setAllergies(allergies);
 
             medicalRecordRepository.addMedicalRecord(medicalRecord);
         }

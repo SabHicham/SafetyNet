@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import safetynet.org.dto.PersonDto;
+import safetynet.org.dto.PersonWithAgeCountDto;
 import safetynet.org.dto.PersonWithMedicalRecordDto;
 import safetynet.org.exception.RessourceNotFoundException;
 import safetynet.org.service.AlertService;
@@ -31,14 +32,14 @@ public class AlertController {
     }
     @RequestMapping(value = "/firestation/stationNumber", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<List<PersonDto>> personByStationNumber(@RequestParam(required = true) int stationNumber) throws RessourceNotFoundException {
+    public ResponseEntity<PersonWithAgeCountDto> personByStationNumber(@RequestParam(required = true) int stationNumber) throws RessourceNotFoundException {
 
 
         return ResponseEntity.status(HttpStatus.OK).body(alertService.personByStationNumber(stationNumber));
 
 
     }
-    @RequestMapping(value = "/childAlert/address", method = RequestMethod.GET)
+    @RequestMapping(value = "/childAlert", method = RequestMethod.GET)
     @ResponseBody
     public ResponseEntity<JSONArray> childByAddress(@RequestParam(required = true) String address) throws RessourceNotFoundException {
 
